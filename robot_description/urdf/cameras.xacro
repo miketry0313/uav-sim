@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!-- Revolute-Revolute Manipulator -->
+<robot name="camera" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<xacro:property name="height1" value="2" /> <!-- Link 1 -->
+<xacro:property name="PI" value="3.1415926535897931"/>
+<xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
+<xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
+<xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
+
+<xacro:include filename="$(find robot_description)/urdf/cameras.gazebo" />
+
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+<link name="world"/>
+
+<joint name="fixed" type="fixed">
+  <parent link="world"/>
+  <child link="link1"/>
+</joint>
+
+<!-- Base Link -->
+  <link name="link1">
+    <collision>
+      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height1}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height1}"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+	  ixx="1.0" ixy="0.0" ixz="0.0"
+	  iyy="1.0" iyz="0.0"
+	  izz="1.0"/>
+    </inertial>
+  </link>
+
+ <joint name="camera1_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="${camera_link} 0 ${height1 - axel_offset*2}" rpy="0 0 0"/>
+    <parent link="link1"/>
+    <child link="camera1_link"/>
+  </joint>
+
+  <!-- Camera -->
+  <link name="camera1_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+  <joint name="camera2_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="${camera_link} 0 ${axel_offset*2}" rpy="0 0 0"/>
+    <parent link="link1"/>
+    <child link="camera2_link"/>
+  </joint>
+
+  <!-- Camera -->
+  <link name="camera2_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+</robot>
